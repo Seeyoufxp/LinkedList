@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 public class SinglyLinkedList implements Iterable<Integer> {
-    private Node head = null;
+    private Node head = new Node(666, null);
 
     @Override
     public Iterator<Integer> iterator() {
         return new Iterator<Integer>() {
-            Node p = head;
+            Node p = head.next;
 
             @Override
             public boolean hasNext() {
@@ -35,12 +35,12 @@ public class SinglyLinkedList implements Iterable<Integer> {
         }
     }
 
-    public void addFirst(int value) {
-        head = new Node(value, head);
+    public void addFirst(int value) throws IllegalAccessException {
+        insert(0, value);
     }
 
     public void loop(Consumer<Integer> consumer) {
-        Node p = head;
+        Node p = head.next;
         while (p != null) {
             consumer.accept(p.value);
             p = p.next;
@@ -48,31 +48,26 @@ public class SinglyLinkedList implements Iterable<Integer> {
     }
 
     public void loop2(Consumer<Integer> consumer) {
-        for (Node p = head; p != null; p = p.next) {
+        for (Node p = head.next; p != null; p = p.next) {
             consumer.accept(p.value);
         }
     }
 
     private Node findLast() {
-        if (head == null) {
-            return null;
-        }
         Node p;
-        for (p = head; p.next != null; p = p.next) ;
+        for (p = head; p.next != null; p = p.next) {
+        }
+        ;
         return p;
     }
 
     public void addLast(int value) {
         Node last = findLast();
-        if (last == null) {
-            addFirst(value);
-            return;
-        }
         last.next = new Node(value, null);
     }
 
     private Node findNode(int index) {
-        int i = 0;
+        int i = -1;
         for (Node p = head; p != null; p = p.next, i++) {
             if (i == index) {
                 return p;
@@ -90,10 +85,6 @@ public class SinglyLinkedList implements Iterable<Integer> {
     }
 
     public void insert(int index, int value) throws IllegalAccessException {
-        if (index == 0) {
-            addFirst(value);
-            return;
-        }
         Node prev = findNode(index - 1);
         if (prev == null) {
             throw illegalIndex(index);
@@ -107,17 +98,10 @@ public class SinglyLinkedList implements Iterable<Integer> {
     }
 
     public void removeFirst() throws IllegalAccessException {
-        if (head == null) {
-            throw illegalIndex(0);
-        }
-        head = head.next;
+        remove(0);
     }
 
     public void remove(int index) throws IllegalAccessException {
-        if (index == 0) {
-            removeFirst();
-            return;
-        }
         Node prev = findNode(index - 1);
         if (prev == null) {
             throw illegalIndex(index);
