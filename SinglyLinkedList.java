@@ -53,6 +53,20 @@ public class SinglyLinkedList implements Iterable<Integer> {
         }
     }
 
+    public void loop3(Consumer<Integer> before, Consumer<Integer> after) {
+        recursion(head.next, before, after);
+    }
+
+    private void recursion(Node curr,
+                           Consumer<Integer> before, Consumer<Integer> after) {
+        if (curr == null) {
+            return;
+        }
+        before.accept(curr.value);
+        recursion(curr.next, before, after);
+        after.accept(curr.value);
+    }
+
     private Node findLast() {
         Node p;
         for (p = head; p.next != null; p = p.next) {
